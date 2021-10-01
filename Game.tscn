@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/3dCharacterController/3dCC.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Models/panda.glb" type="PackedScene" id=2]
+
+[sub_resource type="PhysicsMaterial" id=1]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 10, 0.1, 10 )
+
+[node name="Game" type="Spatial"]
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.581214, 0.486067, -0.652632, 0, 0.802005, 0.597317, 0.813751, -0.347169, 0.466137, -7.59029, 5.86027, 0 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57629, 0 )
+
+[node name="Ground" type="StaticBody" parent="."]
+physics_material_override = SubResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground"]
+shape = SubResource( 2 )
+
+[node name="panda" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.0100529, 0, -0.999949, 0, 1, 0, 0.999949, 0, 0.0100529, -0.0612769, 0.994543, -9.04373 )
