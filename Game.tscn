@@ -1,12 +1,40 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/3dCharacterController/3dCC.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Models/panda.glb" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Enemy.gd" type="Script" id=3]
 
-[sub_resource type="PhysicsMaterial" id=1]
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 100, 0.5, 100 )
 
-[sub_resource type="BoxShape" id=2]
-extents = Vector3( 10, 0.1, 10 )
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.141176, 0.117647, 0.117647, 1 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 50, 0.25, 50 )
+
+[sub_resource type="CubeMesh" id=4]
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 0.321569, 0.184314, 0.654902, 1 )
+
+[sub_resource type="BoxShape" id=6]
+
+[sub_resource type="SphereMesh" id=7]
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_color = Color( 0.87451, 0.180392, 0.180392, 1 )
+
+[sub_resource type="SphereShape" id=9]
+
+[sub_resource type="CubeMesh" id=10]
+size = Vector3( 0.1, 5, 2 )
+
+[sub_resource type="SpatialMaterial" id=11]
+albedo_color = Color( 1, 0.823, 0.41, 1 )
+
+[sub_resource type="BoxShape" id=12]
+extents = Vector3( 0.399697, 2.51854, 1 )
 
 [node name="Game" type="Spatial"]
 
@@ -14,13 +42,80 @@ extents = Vector3( 10, 0.1, 10 )
 transform = Transform( 0.581214, 0.486067, -0.652632, 0, 0.802005, 0.597317, 0.813751, -0.347169, 0.466137, -7.59029, 5.86027, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57629, 0 )
-
-[node name="Ground" type="StaticBody" parent="."]
-physics_material_override = SubResource( 1 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Ground"]
-shape = SubResource( 2 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.43936, 3.10009, 0 )
+gravity = -5
 
 [node name="panda" parent="." instance=ExtResource( 2 )]
 transform = Transform( 0.0100529, 0, -0.999949, 0, 1, 0, 0.999949, 0, 0.0100529, -0.0612769, 0.994543, -9.04373 )
+
+[node name="Ground" type="StaticBody" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="Ground"]
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground"]
+shape = SubResource( 3 )
+
+[node name="Boxes" type="Spatial" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Box" type="StaticBody" parent="Boxes"]
+transform = Transform( 0.702153, 0, -0.712026, 0, 1, 0, 0.712026, 0, 0.702153, 14.1589, 1.31468, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Boxes/Box"]
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/Box"]
+shape = SubResource( 6 )
+
+[node name="Box2" type="StaticBody" parent="Boxes"]
+transform = Transform( 0.702153, 0, -0.712026, 0, 1, 0, 0.712026, 0, 0.702153, -8.09846, 1.31468, 10.1813 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Boxes/Box2"]
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/Box2"]
+shape = SubResource( 6 )
+
+[node name="Box3" type="StaticBody" parent="Boxes"]
+transform = Transform( 0.702153, 0, -0.712026, 0, 1, 0, 0.712026, 0, 0.702153, 7.6357, 1.31468, -6.43483 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Boxes/Box3"]
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/Box3"]
+shape = SubResource( 6 )
+
+[node name="Enemy" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25248, 6.72031 )
+script = ExtResource( 3 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Enemy"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+mesh = SubResource( 7 )
+material/0 = SubResource( 8 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Enemy"]
+shape = SubResource( 9 )
+
+[node name="Ladder" type="Area" parent="."]
+transform = Transform( 0.690504, 0, 0.723329, 0, 1, 0, -0.723329, 0, 0.690504, 13.3618, -0.188051, 0.742274 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="Ladder"]
+mesh = SubResource( 10 )
+material/0 = SubResource( 11 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Ladder"]
+shape = SubResource( 12 )
+
+[connection signal="body_entered" from="Ladder" to="Player" method="_on_Ladder_body_entered"]
+[connection signal="body_exited" from="Ladder" to="Player" method="_on_Ladder_body_exited"]

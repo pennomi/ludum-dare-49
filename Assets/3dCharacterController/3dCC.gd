@@ -1,6 +1,6 @@
 extends KinematicBody
 
-enum State {IDLE, RUN, JUMP, FALL}
+enum State {IDLE, RUN, JUMP, FALL, LADDER}
 
 const JUMP_SPEED = 7
 const JUMP_FRAMES = 1
@@ -92,6 +92,7 @@ var collision : KinematicCollision  # Stores the collision from move_and_collide
 var velocity := Vector3(0, 0, 0)
 var rotation_buf = rotation  # used to calculate rotation delta for air strafing
 var turn_boost = 1
+var on_ladder = false
 func _process_movement(delta):
 	# state management
 	if !collision:
@@ -125,6 +126,7 @@ func _process_movement(delta):
 		if velocity.y > gravity:
 			velocity.y += gravity * delta * 4
 	
+
 	#run state
 	if state == State.RUN:
 		velocity += input_dir.rotated(Vector3(0, 1, 0), rotation.y) * acceleration
@@ -135,7 +137,6 @@ func _process_movement(delta):
 		# fake gravity to keep character on the ground
 		# increase if player is falling down slopes instead of running
 		velocity.y -= .0001 + (int(velocity.y < 0) * 1.1)  
-		
 
 	#idle state
 	if state == State.IDLE && frames < HOP_FRAMES + JUMP_FRAMES:
@@ -168,6 +169,10 @@ func _process_movement(delta):
 				
 		turn_boost = clamp(turn_boost, 1, max_boost_multiplier)
 		rotation_buf = rotation
+		
+	# ladder
+	if on_ladder:
+		velocity.y = JUMP_SPEED
 
 	#apply
 	if velocity.length() >= .5 || inbetween:
@@ -196,4 +201,18 @@ func _update_hud():
 		$HUD/Crosshair.material.set_shader_param("color_id", 0)
 	
 	$HUD/Crosshair.material.set_shader_param("spread", velocity.length()/4 + 1)
-		
+
+
+# Note this method requires that the player be hooked up
+# with each ladder. You could hook them up at runtime
+# if you have a lot of ladders.
+func _on_Ladder_body_entered(body):
+	if body == self:
+		on_ladder = true
+		print('ladder enter ', body.name)
+
+
+func _on_Ladder_body_exited(body):
+	if body == self:
+		on_ladder = false
+		print('ladder exit ', body.name)
